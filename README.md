@@ -9,7 +9,7 @@
 ### 5. A cada vitória, o jogador ganha experiência e pode subir de nível.
 ------------------------------------------------------------------------------------
 # 🧠 Lógica do Jogo
-### O dano causado por jogador e NPC é aleatório, baseado no nível e poder de ataque.
+# O dano causado por jogador e NPC é aleatório, baseado no nível e poder de ataque.
 ## O jogador começa com:
 ### . Vida: 100
 ### . Dano base: 25
