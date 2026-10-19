@@ -1,0 +1,16 @@
+{
+  "jogador": {
+    "nome": "loki",
+    "classe": "Mago",
+    "level": 3,
+    "exp": 22,
+    "exp_max": 45,
+    "vida": 130,
+    "vida_max": 130,
+    "mana": 60,
+    "mana_max": 60,
+    "dano": 21,
+    "pocoes": 5
+  },
+  "proximo": 4
+}

@@ -1,30 +1,79 @@
-# 🐉 RPG de Batalha em Python 
-## Um mini jogo de RPG em terminal onde você enfrenta uma sequência de monstros com dificuldade crescente. O jogador ganha experiência ao vencer batalhas e pode subir de nível, aumentando seu poder de ataque e vida máxima.
-------------------------------------------------------------------------------------
-# 🎮 Como Jogar
-### 1. O jogo inicia pedindo o nome do jogador.
-### 2. São gerados automaticamente 5 NPCs (monstros) com nível progressivo.
-### 3. O jogador enfrentará os NPCs um a um em batalhas automáticas.
-### 4. Após cada vitória, o jogador pode escolher continuar lutando ou encerrar o jogo.
-### 5. A cada vitória, o jogador ganha experiência e pode subir de nível.
-------------------------------------------------------------------------------------
-# 🧠 Lógica do Jogo
-## O dano causado por jogador e NPC é aleatório, baseado no nível e poder de ataque.
-## O jogador começa com:
-### . Vida: 100
-### . Dano base: 25
-### . Exp para upar: 20
-## Ao subir de nível:
-### . Aumenta dano e vida máxima.
-### . A experiência necessária dobra a cada nível.
------------------------------------------------------------------------------------
-# 🛠️ Melhorias Futuras
-### . Implementar múltiplas classes de personagem.
+# Jogo RPG
 
-### . A dicionar inventário e habilidades.
+RPG de batalha por turnos para o terminal, feito em Python sem bibliotecas externas.
 
-### . Sistema de salvamento e carregamento do jogo.
+## Como executar
 
-### . Adicionar bosses ou eventos aleatórios.
------------------------------------------------------------------------------------
-## Usei como base o video do Progamador Python(https://www.youtube.com/watch?v=CS_Th38ADug&list=PL0UvQ8QfB92wZWh2NVVHmUSGu_Bdy_Ehl&index=3)
+Requer Python 3.8 ou superior.
+
+```
+python main.py
+```
+
+No Windows, use `py main.py`. No Linux e no macOS, use `python3 main.py`.
+
+## Como jogar
+
+O jogador escolhe uma classe (Guerreiro, Mago ou Arqueiro) e percorre cinco fases. Cada fase tem um monstro comum e um chefe. Depois de cada vitória, o jogo abre uma loja. Ao derrotar o chefe, o jogador recebe um baú com um equipamento.
+
+Fases já concluídas podem ser refeitas para ganhar experiência, ouro e novos baús.
+
+| Ação | Efeito |
+| --- | --- |
+| Atacar | Dano aleatório com 10% de chance de acerto crítico (dano dobrado) e 10% de chance de errar |
+| Especial | Custa 10 de mana, nunca erra e causa mais dano que o ataque normal |
+| Defender | Reduz pela metade o dano do próximo ataque do monstro |
+| Poção de vida | Recupera 50 de vida |
+| Poção de mana | Recupera 30 de mana |
+| Salvar e sair | Grava a luta no ponto exato em que está |
+
+## Fases
+
+| Fase | Monstro | Chefe | Evento do ambiente | Efeito de status |
+| --- | --- | --- | --- | --- |
+| Floresta Sombria | Lobo | Lobo Alfa | Galho despenca | Sangramento |
+| Deserto Escaldante | Escorpião Gigante | Esfinge de Areia | Tempestade de areia | Veneno |
+| Vulcão Ardente | Golem de Lava | Dragão de Magma | Lava cai do teto | Queimadura |
+| Cripta Esquecida | Esqueleto Guerreiro | Lorde Necromante | Ossos desabam | Maldição |
+| Montanha Gelada | Yeti | Dragão de Gelo | Avalanche | Hipotermia |
+
+A cada rodada pode ocorrer um evento do ambiente, que atinge o jogador ou o monstro ao acaso. Cada monstro tem um golpe especial com chance de aplicar um efeito de status, que causa dano por três turnos.
+
+## Equipamentos
+
+Os chefes soltam um equipamento de tipo aleatório. Cada item tem um tier (1 a 3) e um nível sorteado dentro da faixa do tier. Fases mais avançadas aumentam a chance de tiers maiores.
+
+| Tier | Faixa de nível |
+| --- | --- |
+| 1 | 7 a 22 |
+| 2 | 23 a 40 |
+| 3 | 41 a 60 |
+
+| Tipo | Efeito |
+| --- | --- |
+| Espada | Dano do ataque normal + nível / 2 |
+| Escudo | Dano recebido - nível / 3 |
+| Cajado | Dano do ataque especial + nível |
+| Arco | Chance de crítico + nível / 2 (%) |
+
+A loja de cada fase vende dois equipamentos exclusivos, com preços altos que incentivam refazer fases para juntar ouro.
+
+## Salvamento
+
+Cada jogador tem um arquivo próprio na pasta `saves/`. No menu inicial é possível continuar um save, criar um novo (com confirmação antes de sobrescrever um nome existente) e apagar um save. Arquivos corrompidos ou em formato antigo são ignorados.
+
+## Estrutura
+
+```
+main.py    lógica do jogo
+dados.py   tabelas: classes, fases, monstros, equipamentos, efeitos e loja
+saves/     criada automaticamente
+```
+
+Os valores de balanceamento ficam em `dados.py`, então alterar um preço, um monstro ou uma fase não exige mexer na lógica.
+
+## Decisões de projeto
+
+- Jogador e monstros são dicionários, o que permite salvar o estado direto em JSON.
+- O estado de uma luta em andamento é gravado junto com o jogador, permitindo retomar do mesmo ponto.
+- A dificuldade foi ajustada com simulações automáticas de partidas, garantindo que as três classes consigam concluir o jogo apenas com os baús dos chefes.
