@@ -1,6 +1,6 @@
 # Jogo RPG
 
-Um RPG de batalha por turnos que roda no terminal, feito em Python. Fiz esse projeto para praticar o que estou aprendendo: dicionários, funções, loops, arquivos JSON e testes.
+Um jogo de RPG por turnos feito em Python que roda direto no terminal. Fiz esse projeto para praticar o que estou aprendendo em programação, como dicionários, funções, loops, arquivos JSON e testes automatizados.
 
 ## Como rodar
 
@@ -10,22 +10,24 @@ Precisa ter o Python 3 instalado.
 python main.py
 ```
 
-No Windows, se não funcionar, use `py main.py`. No Linux e no Mac, use `python3 main.py`.
+No Windows, se não funcionar, use `py main.py`. No Linux e no Mac, tente `python3 main.py`.
 
 ## Como jogar
 
-Você escolhe uma classe (Guerreiro, Mago ou Arqueiro) e passa por 5 fases. Cada fase tem um monstro e um chefe. Depois de cada vitória abre uma loja, e o chefe deixa um baú com um equipamento. As fases podem ser refeitas para ganhar ouro, experiência e equipamentos melhores.
+Você escolhe uma classe (Guerreiro, Mago ou Arqueiro) e precisa passar por 5 fases. Cada fase tem um monstro e um chefe. Depois das vitórias, abre uma loja para comprar equipamentos, e os chefes deixam baús com equipamentos aleatórios. Também dá para repetir as fases para conseguir mais ouro, experiência e equipamentos melhores.
 
-Ações durante a luta:
+Durante as lutas, você pode:
 
-- Atacar: causa dano, com 10% de chance de crítico (dano dobrado) e 10% de chance de errar
-- Especial: gasta 10 de mana e nunca erra
-- Defender: reduz pela metade o próximo golpe e bloqueia os status
-- Poção de vida: recupera 50 de vida
-- Poção de mana: recupera 30 de mana
-- Salvar e sair: guarda a luta exatamente no ponto em que está
+- **Atacar:** causa dano normal, com 10% de chance de crítico (dano dobrado) e 10% de chance de errar.
+- **Especial:** gasta 10 de mana e não erra.
+- **Defender:** reduz pela metade o próximo golpe recebido e bloqueia efeitos de status.
+- **Poção de vida:** recupera 50 de vida.
+- **Poção de mana:** recupera 30 de mana.
+- **Salvar e sair:** salva a partida para continuar depois, até mesmo durante uma luta.
 
-O jogo é difícil de propósito, inspirado em jogos do tipo Souls. O monstro avisa um turno antes de usar o golpe especial, e é nessa hora que vale a pena defender. Se o jogador morre, perde 25% do ouro. Mesmo assim dá para vencer: testei com um bot que joga sozinho.
+Tentei deixar o jogo difícil de propósito, com inspiração em jogos do estilo Souls. Os monstros avisam um turno antes de usar seus golpes especiais, então é importante prestar atenção e saber a hora de defender. Se o jogador morrer, perde 25% do ouro.
+
+Também fiz testes com um bot jogando sozinho para conferir se dava para terminar o jogo sem precisar comprar equipamentos na loja.
 
 ## Fases
 
@@ -37,73 +39,91 @@ O jogo é difícil de propósito, inspirado em jogos do tipo Souls. O monstro av
 | Cripta Esquecida | Esqueleto Guerreiro | Lorde Necromante | Ossos desabam |
 | Montanha Gelada | Yeti | Dragão de Gelo | Avalanche |
 
-O evento da fase pode cair no jogador ou no monstro. Os golpes especiais podem causar status (sangramento, veneno, queimadura, maldição e hipotermia). Cada status causa dano por 3 turnos e vários podem ficar ativos juntos.
+Os eventos podem atingir tanto o jogador quanto o monstro. Os golpes especiais também podem causar efeitos como sangramento, veneno, queimadura, maldição e hipotermia. Cada efeito causa dano por 3 turnos, e vários podem ficar ativos ao mesmo tempo.
 
-Ao zerar o jogo, abre o Abismo Esquecido, uma fase secreta com um chefe opcional.
+Depois de zerar o jogo, é desbloqueado o Abismo Esquecido, uma fase secreta com um chefe opcional.
 
 ## Equipamentos
 
-O chefe solta um equipamento aleatório: espada, escudo, cajado ou arco. Cada um tem um tier de 1 a 3, e o nível é sorteado dentro da faixa do tier:
+Os chefes deixam um equipamento aleatório: espada, escudo, cajado ou arco. Cada equipamento tem um tier de 1 a 3, e seu nível é sorteado dentro da faixa correspondente:
 
 - Tier 1: nível 7 a 22
 - Tier 2: nível 23 a 40
 - Tier 3: nível 41 a 60
 
-O que cada tipo faz:
+Cada tipo de equipamento tem uma função diferente:
 
-- Espada: soma metade do nível no ataque normal
-- Escudo: reduz o dano recebido em nível dividido por 3
-- Cajado: soma o nível no ataque especial
-- Arco: aumenta a chance de crítico em metade do nível (%)
+- **Espada:** aumenta o ataque normal em metade do nível do equipamento.
+- **Escudo:** reduz o dano recebido de acordo com o nível dividido por 3.
+- **Cajado:** aumenta o dano do ataque especial de acordo com o nível.
+- **Arco:** aumenta a chance de crítico em metade do nível, em porcentagem.
 
-Equipamentos de tier 2 e 3 têm um efeito extra, que vale 10% vezes o tier: a espada rouba vida, o escudo devolve parte do dano, o cajado pode atordoar o monstro e o arco pode atirar duas flechas.
+Os equipamentos de tier 2 e 3 também têm efeitos extras. A espada pode roubar vida, o escudo pode devolver parte do dano recebido, o cajado pode atordoar o monstro e o arco pode disparar duas flechas. A chance ou o valor do efeito depende do tier, usando a proporção de 10% por tier.
 
-A loja de cada fase vende duas armas diferentes, com preços entre 380 e 2400 de ouro. Como o ouro das lutas é pouco, é preciso refazer fases para juntar.
+A loja de cada fase vende duas armas diferentes, com preços entre 380 e 2400 de ouro. Como não é tão fácil conseguir ouro nas lutas, às vezes é preciso repetir algumas fases para juntar dinheiro.
 
 ## Saves e ranking
 
-Cada jogador tem um arquivo na pasta `saves/`. No menu inicial dá para continuar um jogo, começar outro (o jogo pergunta antes de sobrescrever um nome que já existe) e apagar um save. Arquivos corrompidos ou de versões antigas são ignorados.
+Cada jogador tem um arquivo de save na pasta `saves/`. No menu inicial, dá para continuar uma partida, começar outra ou apagar um save. Se o nome escolhido já existir, o jogo pergunta antes de sobrescrever o arquivo.
 
-O ranking mostra quem zerou o jogo, ordenado pelo menor número de turnos.
+Também fiz algumas verificações para evitar problemas com saves corrompidos ou de versões antigas. Esses arquivos são ignorados para evitar que o jogo trave.
+
+O ranking mostra quem conseguiu zerar o jogo, organizado pelo menor número de turnos utilizados.
 
 ## Testes
+
+Para executar os testes, use:
 
 ```
 python -m unittest
 ```
 
-A pasta `testes/` tem quase 200 testes com `unittest`. Tem testes pequenos para cada regra (crítico, defesa, status, loja, save...) e também partidas completas jogadas por um bot, para conferir que o jogo é difícil mas dá para vencer sem comprar nada na loja.
+A pasta `testes/` tem quase 200 testes feitos com `unittest`. Tem testes para várias regras do jogo, como crítico, defesa, efeitos de status, loja e saves. Também fiz testes de partidas completas com um bot jogando sozinho, para conferir se dava para vencer sem comprar nada na loja.
 
 ## Estrutura
 
 ```
-main.py    funções do jogo
-dados.py   tabelas: classes, fases, monstros, equipamentos, status e loja
-testes/    testes automáticos
-saves/     criada sozinha quando o jogo salva
+main.py    funções principais do jogo
+dados.py   dados das classes, fases, monstros, equipamentos, status e loja
+testes/    testes automatizados
+saves/     criada automaticamente quando o jogo salva
 ```
 
-Deixei as tabelas em `dados.py` para poder mudar um preço ou criar uma fase sem mexer nas funções do `main.py`.
+Deixei os dados separados no `dados.py` para facilitar as mudanças. Assim, se eu quiser alterar um preço ou criar uma fase nova, por exemplo, não preciso mexer diretamente nas funções do `main.py`.
 
 ## Bugs que apareceram no caminho
 
-- **Nível só subia com experiência exata.** O código original usava `==`, então se o jogador passasse da experiência necessária nunca subia de nível. Troquei por `>=` e o que sobra de experiência é guardado. Também funciona quando sobe mais de um nível de uma vez.
-- **Vida não enchia depois de subir de nível.** Eu restaurava a vida antes de aplicar o aumento de nível, então aparecia algo como 120/140. Descobri com um teste e agora a restauração acontece depois.
-- **O monstro era criado duas vezes.** Isso fazia a vida dele ser sorteada de novo no meio da fase. Passei a criar uma vez só por luta.
-- **O save aparecia em lugares diferentes.** O caminho dependia da pasta em que o terminal estava aberto. Agora a pasta `saves/` fica sempre ao lado do `main.py`.
-- **Save quebrado ou antigo travava o jogo.** Usei `try/except` na leitura e conferi se o arquivo tem as chaves necessárias antes de mostrar na lista.
-- **Um teste achava emojis nos próprios arquivos.** O teste que garante que não há emoji no projeto tinha emojis escritos no código dele. Troquei por intervalos escritos em código unicode.
+Durante o desenvolvimento, encontrei alguns problemas que não tinha percebido no começo. Fui corrigindo conforme testava o jogo e encontrava situações que não funcionavam como eu esperava.
+
+- **O personagem não subia de nível em algumas situações.** No começo, eu usava `==` para verificar se o jogador tinha a experiência necessária. O problema era que, se ele ganhasse mais experiência do que precisava, não subia de nível. Troquei por `>=` e também fiz com que a experiência que sobrasse fosse mantida. Assim, o jogador consegue subir mais de um nível de uma vez.
+- **A vida não ficava cheia depois de subir de nível.** Percebi isso durante os testes, quando o personagem aumentava a vida máxima, mas continuava com a quantidade antiga de vida. O problema era a ordem em que eu fazia as coisas. Mudei o código para restaurar a vida depois de aplicar o aumento de nível.
+- **O monstro acabava sendo criado duas vezes.** Era uma criação repetida no código, o que podia deixar a luta com um monstro diferente do que estava sendo mostrado. Depois de encontrar o problema, ajustei o código para criar o monstro apenas uma vez por luta.
+- **Os saves eram salvos em lugares diferentes.** Quando eu executava o jogo a partir de outra pasta, os arquivos podiam acabar no lugar errado. Corrigi o caminho para que a pasta `saves/` fique sempre ao lado do `main.py`, independentemente de onde o terminal foi aberto.
+- **Um save com problemas podia atrapalhar o início do jogo.** Percebi que um arquivo corrompido ou de uma versão antiga podia causar erros na hora de carregar a lista de partidas. Adicionei `try/except` e verificações para ignorar arquivos que não tivessem as informações necessárias.
+- **Um teste estava encontrando emojis no próprio código.** Eu tinha feito um teste para verificar se existiam emojis nos arquivos do projeto, mas o próprio teste continha os caracteres que estava procurando. Para resolver isso, passei a usar intervalos de códigos Unicode em vez de escrever os emojis diretamente.
+
+Esses problemas me ajudaram a perceber que nem sempre o código funciona como a gente espera na primeira tentativa. Por isso, fui criando testes para conferir as correções e evitar que os mesmos erros aparecessem novamente.
 
 ## O que aprendi
 
-- Usar dicionários para guardar o jogador e os monstros, o que deixa fácil salvar tudo em JSON
-- Dividir o jogo em funções pequenas
-- Controlar o fim da luta com `while`
-- Ler e gravar arquivos JSON e tratar erros com `try/except`
-- Escrever testes com `unittest` e simular o `input()` para jogar automaticamente
+Com esse projeto, consegui praticar várias coisas que estava aprendendo em Python:
+
+- Usar dicionários para guardar as informações do jogador e dos monstros e facilitar o salvamento em JSON.
+- Dividir o código em funções menores para organizar melhor o projeto.
+- Usar loops `while` para controlar o funcionamento das batalhas.
+- Ler e gravar arquivos JSON e tratar erros com `try/except`.
+- Criar testes com `unittest`.
+- Simular o `input()` para testar as partidas automaticamente.
+- Encontrar e corrigir bugs durante o desenvolvimento.
+
+Também percebi que os testes ajudam bastante, porque alguns problemas não aparecem durante uma partida normal, mas podem ser encontrados ao simular situações diferentes.
 
 ## Créditos e uso de IA
 
-Usei como base o vídeo do Progamador Python: https://www.youtube.com/watch?v=CS_Th38ADug&list=PL0UvQ8QfB92wZWh2NVVHmUSGu_Bdy_Ehl&index=3
+Usei como referência o vídeo do Programador Python:
 
-Também usei IA (Claude, da Anthropic) como ajuda: para encontrar e corrigir bugs, para sugerir ideias de mecânicas e para montar os testes. A estrutura do código eu entendo e consigo explicar, mas deixo aqui registrado que a IA participou do projeto.
+https://www.youtube.com/watch?v=CS_Th38ADug&list=PL0UvQ8QfB92wZWh2NVVHmUSGu_Bdy_Ehl&index=3
+
+Também usei o Claude, da Anthropic, como ajuda durante o desenvolvimento, principalmente para encontrar e corrigir bugs, pensar em algumas mecânicas e montar os testes.
+
+A IA fez parte do desenvolvimento, mas procurei entender como o código funciona e as soluções utilizadas, para conseguir explicar o projeto.

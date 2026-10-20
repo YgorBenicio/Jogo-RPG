@@ -59,7 +59,7 @@ def forca_extra(jogador, tipo):
 
 
 def descrever(item):
-    return f"{item['nome']} (Tier {item['tier']}, nivel {item['nivel']})"
+    return f"{item['nome']} (Tier {item['tier']}, nível {item['nivel']})"
 
 
 def descrever_efeitos(item):
@@ -80,16 +80,16 @@ def exibir_status(jogador, monstro):
           f"Exp {jogador['exp']}/{jogador['exp_max']}")
     print(f"Vida {jogador['vida']}/{jogador['vida_max']} | "
           f"Mana {jogador['mana']}/{jogador['mana_max']} | Dano {jogador['dano']}")
-    print(f"Pocoes: vida {jogador['pocoes_vida']}, mana {jogador['pocoes_mana']}")
+    print(f"Poções: vida {jogador['pocoes_vida']}, mana {jogador['pocoes_mana']}")
     if jogador["efeitos"]:
         lista = ", ".join(f"{EFEITOS[nome]['nome']} ({turnos})"
                           for nome, turnos in jogador["efeitos"].items())
         print(f"Efeitos: {lista}")
     print(f"{monstro['nome']}: Vida {monstro['vida']}/{monstro['vida_max']} | "
-          f"Dano max. {monstro['dano']}")
+          f"Dano máx. {monstro['dano']}")
     print(f"Especial: {especial['nome']} ({especial['chance']}%)")
     if monstro.get("preparando"):
-        print(f"ATENCAO: {monstro['nome']} esta se preparando para {especial['nome']}!")
+        print(f"ATENÇÃO: {monstro['nome']} está se preparando para {especial['nome']}!")
 
 
 def subir_de_nivel(jogador):
@@ -106,16 +106,16 @@ def subir_de_nivel(jogador):
 
 def ataque_normal(jogador, monstro):
     if sortear(CHANCE_ERRO):
-        print("Voce errou o ataque.")
+        print("Você errou o ataque.")
         return
 
     dano = randint(jogador["dano"] // 2, jogador["dano"])
     dano += bonus_equipamento(jogador, "Espada") // 2
     if sortear(CHANCE_CRITICO + bonus_equipamento(jogador, "Arco") // 2):
         dano *= 2
-        print("Acerto critico!")
+        print("Acerto crítico!")
     monstro["vida"] -= dano
-    print(f"Voce causou {dano} de dano.")
+    print(f"Você causou {dano} de dano.")
 
     forca = forca_extra(jogador, "Arco")
     if forca and sortear(forca):
@@ -125,7 +125,7 @@ def ataque_normal(jogador, monstro):
     cura = dano * forca_extra(jogador, "Espada") // 100
     if cura > 0:
         jogador["vida"] = min(jogador["vida_max"], jogador["vida"] + cura)
-        print(f"Roubo de vida: voce recuperou {cura} de vida.")
+        print(f"Roubo de vida: você recuperou {cura} de vida.")
 
 
 def ataque_especial(jogador, monstro):
@@ -133,7 +133,7 @@ def ataque_especial(jogador, monstro):
     dano = randint(jogador["dano"], jogador["dano"] * 2)
     dano += bonus_equipamento(jogador, "Cajado")
     monstro["vida"] -= dano
-    print(f"Ataque especial! Voce causou {dano} de dano.")
+    print(f"Ataque especial! Você causou {dano} de dano.")
 
     forca = forca_extra(jogador, "Cajado")
     if forca and sortear(forca):
@@ -144,7 +144,7 @@ def ataque_especial(jogador, monstro):
 def usar_pocao(jogador, tipo):
     estoque = f"pocoes_{tipo}"
     if jogador[estoque] == 0:
-        print(f"Voce nao tem pocoes de {tipo}.")
+        print(f"Você não tem poções de {tipo}.")
         return "invalido"
     jogador[estoque] -= 1
     jogador["stats"]["pocoes_usadas"] += 1
@@ -152,14 +152,14 @@ def usar_pocao(jogador, tipo):
         jogador["vida"] = min(jogador["vida_max"], jogador["vida"] + 50)
     else:
         jogador["mana"] = min(jogador["mana_max"], jogador["mana"] + 30)
-    print(f"Voce recuperou {tipo}.")
+    print(f"Você recuperou {tipo}.")
     return "ok"
 
 
 def turno_do_jogador(jogador, monstro):
     print("\n[1] Atacar  [2] Especial (10 de mana)  [3] Defender")
-    print("[4] Pocao de vida  [5] Pocao de mana  [6] Salvar e sair")
-    escolha = input("Acao: ")
+    print("[4] Poção de vida  [5] Poção de mana  [6] Salvar e sair")
+    escolha = input("Ação: ")
 
     if escolha == "1":
         ataque_normal(jogador, monstro)
@@ -169,7 +169,7 @@ def turno_do_jogador(jogador, monstro):
             return "invalido"
         ataque_especial(jogador, monstro)
     elif escolha == "3":
-        print("Voce se prepara para o proximo golpe.")
+        print("Você se prepara para o próximo golpe.")
         return "defesa"
     elif escolha == "4":
         return usar_pocao(jogador, "vida")
@@ -178,14 +178,14 @@ def turno_do_jogador(jogador, monstro):
     elif escolha == "6":
         return "sair"
     else:
-        print("Opcao invalida.")
+        print("Opção inválida.")
         return "invalido"
     return "ok"
 
 
 def aplicar_status(jogador, nome):
     jogador["efeitos"][nome] = EFEITOS[nome]["turnos"]
-    print(f"Voce esta com {EFEITOS[nome]['nome']}!")
+    print(f"Você está com {EFEITOS[nome]['nome']}!")
 
 
 def golpear(jogador, monstro, dano, defendendo, especial=None):
@@ -213,7 +213,7 @@ def turno_do_monstro(jogador, monstro, defendendo):
     if monstro.get("atordoado"):
         monstro["atordoado"] = False
         monstro["preparando"] = False
-        print(f"{monstro['nome']} esta atordoado e perde o turno.")
+        print(f"{monstro['nome']} está atordoado e perde o turno.")
     elif monstro.get("preparando"):
         monstro["preparando"] = False
         print(f"{monstro['nome']} usou {especial['nome']}!")
@@ -233,7 +233,7 @@ def aplicar_efeitos(jogador):
         dados = EFEITOS[nome]
         jogador["vida"] -= dados["dano"]
         jogador["efeitos"][nome] -= 1
-        print(f"{dados['nome']} causou {dados['dano']} de dano em voce.")
+        print(f"{dados['nome']} causou {dados['dano']} de dano em você.")
         if jogador["efeitos"][nome] == 0:
             del jogador["efeitos"][nome]
             print(f"{dados['nome']} passou.")
@@ -247,7 +247,7 @@ def aplicar_evento(evento, jogador, monstro):
     dano = randint(evento["dano"] // 2, evento["dano"])
     if choice(["jogador", "monstro"]) == "jogador":
         jogador["vida"] -= dano
-        alvo = "voce"
+        alvo = "você"
     else:
         monstro["vida"] -= dano
         alvo = monstro["nome"]
@@ -284,8 +284,8 @@ def receber_recompensa(jogador, monstro):
     jogador["exp"] += monstro["exp"]
     jogador["ouro"] += monstro["ouro"]
     jogador["pocoes_vida"] += 1
-    print(f"\nVitoria! +{monstro['exp']} de experiencia, +{monstro['ouro']} de ouro "
-          f"e 1 pocao de vida.")
+    print(f"\nVitória! +{monstro['exp']} de experiência, +{monstro['ouro']} de ouro "
+          f"e 1 poção de vida.")
     subir_de_nivel(jogador)
 
 
@@ -310,7 +310,7 @@ def abrir_bau(jogador, numero):
         "tier": tier,
         "nivel": randint(minimo, maximo),
     }
-    print(f"\nO chefe deixou um bau! Voce encontrou: {descrever(item)}")
+    print(f"\nO chefe deixou um baú! Você encontrou: {descrever(item)}")
     print(f"Efeito: {descrever_efeitos(item)}")
     oferecer_item(jogador, item)
 
@@ -319,8 +319,8 @@ def loja(jogador, numero):
     armas = LOJA[numero]
     while True:
         print(f"\n===== Loja | Ouro: {jogador['ouro']} =====")
-        print(f"[1] Pocao de vida - {PRECO_POCAO_VIDA} de ouro")
-        print(f"[2] Pocao de mana - {PRECO_POCAO_MANA} de ouro")
+        print(f"[1] Poção de vida - {PRECO_POCAO_VIDA} de ouro")
+        print(f"[2] Poção de mana - {PRECO_POCAO_MANA} de ouro")
         for posicao, item in enumerate(armas, start=3):
             print(f"[{posicao}] {descrever(item)} - {item['preco']} de ouro")
             print(f"    {descrever_efeitos(item)}")
@@ -336,7 +336,7 @@ def loja(jogador, numero):
                 continue
             jogador["ouro"] -= preco
             jogador["pocoes_vida" if escolha == "1" else "pocoes_mana"] += 1
-            print("Pocao comprada.")
+            print("Poção comprada.")
         elif escolha.isdigit() and 3 <= int(escolha) < 3 + len(armas):
             item = armas[int(escolha) - 3]
             if jogador["ouro"] < item["preco"]:
@@ -345,7 +345,7 @@ def loja(jogador, numero):
             if oferecer_item(jogador, dict(item)):
                 jogador["ouro"] -= item["preco"]
         else:
-            print("Opcao invalida.")
+            print("Opção inválida.")
 
 
 def restaurar(jogador):
@@ -373,9 +373,9 @@ def jogar_fase(jogador, numero, etapa_inicial=None, monstro=None):
             restaurar(jogador)
             perda = jogador["ouro"] * PERDA_OURO_NA_MORTE // 100
             jogador["ouro"] -= perda
-            print("\n===== VOCE MORREU =====")
+            print("\n===== VOCÊ MORREU =====")
             if perda:
-                print(f"Voce perdeu {perda} de ouro.")
+                print(f"Você perdeu {perda} de ouro.")
             return "derrota"
 
         receber_recompensa(jogador, monstro)
@@ -398,7 +398,7 @@ def processar_fase(jogador, numero, etapa=None, monstro=None):
         if numero == ULTIMA_FASE and jogador["zerou_em"] is None:
             jogador["zerou_em"] = jogador["stats"]["turnos"]
             jogador["fase"] = FASE_SECRETA
-            print("\nVoce derrotou todos os chefes. Fim de jogo!")
+            print("\nVocê derrotou todos os chefes. Fim de jogo!")
             exibir_resumo(jogador)
             print(f"\nFase secreta liberada: {FASES[FASE_SECRETA]['nome']}!")
         elif numero == jogador["fase"] and numero < ULTIMA_FASE:
@@ -420,8 +420,8 @@ def exibir_resumo(jogador):
     stats = jogador["stats"]
     print("\n===== Resumo =====")
     print(f"Jogador: {jogador['nome']} ({jogador['classe']}), level {jogador['level']}")
-    print(f"Niveis ganhos: {stats['niveis']}")
-    print(f"Pocoes usadas: {stats['pocoes_usadas']}")
+    print(f"Níveis ganhos: {stats['niveis']}")
+    print(f"Poções usadas: {stats['pocoes_usadas']}")
     print(f"Turnos jogados: {stats['turnos']}")
     print(f"Ouro acumulado: {jogador['ouro']}")
 
@@ -443,7 +443,7 @@ def menu_mapa(jogador):
         elif escolha.isdigit() and 1 <= int(escolha) <= jogador["fase"]:
             return int(escolha)
         else:
-            print("Opcao invalida.")
+            print("Opção inválida.")
 
 
 def caminho_save(nome):
@@ -499,7 +499,7 @@ def escolher_save(titulo):
             return None
         if escolha.isdigit() and 1 <= int(escolha) <= len(saves):
             return saves[int(escolha) - 1]
-        print("Opcao invalida.")
+        print("Opção inválida.")
 
 
 def apagar_save():
@@ -517,22 +517,22 @@ def exibir_ranking():
     )
     print("\n===== Ranking: menos turnos para zerar o jogo =====")
     if not registros:
-        print("Ninguem zerou o jogo ainda.")
+        print("Ninguém zerou o jogo ainda.")
         return
     for posicao, (turnos, nome, classe) in enumerate(registros[:10], start=1):
         print(f"{posicao}. {nome} ({classe}) - {turnos} turnos")
 
 
 def novo_jogo():
-    nome = input("Digite o nome do jogador: ").strip() or "Heroi"
+    nome = input("Digite o nome do jogador: ").strip() or "Herói"
     if os.path.exists(caminho_save(nome)):
-        if input("Ja existe um save com esse nome. Sobrescrever? (s/n): ").lower() != "s":
+        if input("Já existe um save com esse nome. Sobrescrever? (s/n): ").lower() != "s":
             return None
 
     print("\n[1] Guerreiro  [2] Mago  [3] Arqueiro")
     escolha = input("Classe: ")
     while escolha not in CLASSES:
-        escolha = input("Opcao invalida. Classe (1, 2 ou 3): ")
+        escolha = input("Opção inválida. Classe (1, 2 ou 3): ")
     return criar_jogador(nome, CLASSES[escolha])
 
 
@@ -544,7 +544,7 @@ def menu_inicial():
         print("[3] Apagar save")
         print("[4] Ranking")
         print("[0] Sair")
-        opcao = input("Opcao: ")
+        opcao = input("Opção: ")
 
         if opcao == "1":
             jogador = novo_jogo()
@@ -561,7 +561,7 @@ def menu_inicial():
         elif opcao == "0":
             return None, None
         else:
-            print("Opcao invalida.")
+            print("Opção inválida.")
 
 
 def iniciar_jogo():
