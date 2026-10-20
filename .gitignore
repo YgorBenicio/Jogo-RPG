@@ -1,5 +1,4 @@
 __pycache__/
 *.pyc
 saves/
-.venv/
-save.json
+.vscode/
