@@ -100,7 +100,6 @@ Durante o desenvolvimento, encontrei alguns problemas que não tinha percebido n
 - **O monstro acabava sendo criado duas vezes.** Era uma criação repetida no código, o que podia deixar a luta com um monstro diferente do que estava sendo mostrado. Depois de encontrar o problema, ajustei o código para criar o monstro apenas uma vez por luta.
 - **Os saves eram salvos em lugares diferentes.** Quando eu executava o jogo a partir de outra pasta, os arquivos podiam acabar no lugar errado. Corrigi o caminho para que a pasta `saves/` fique sempre ao lado do `main.py`, independentemente de onde o terminal foi aberto.
 - **Um save com problemas podia atrapalhar o início do jogo.** Percebi que um arquivo corrompido ou de uma versão antiga podia causar erros na hora de carregar a lista de partidas. Adicionei `try/except` e verificações para ignorar arquivos que não tivessem as informações necessárias.
-- **Um teste estava encontrando emojis no próprio código.** Eu tinha feito um teste para verificar se existiam emojis nos arquivos do projeto, mas o próprio teste continha os caracteres que estava procurando. Para resolver isso, passei a usar intervalos de códigos Unicode em vez de escrever os emojis diretamente.
 
 Esses problemas me ajudaram a perceber que nem sempre o código funciona como a gente espera na primeira tentativa. Por isso, fui criando testes para conferir as correções e evitar que os mesmos erros aparecessem novamente.
 
